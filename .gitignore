@@ -1,0 +1,10 @@
+/node_modules/
+/public/build
+/.idea/
+/coverage/
+/bower_components/
+/.bundle/
+/.vagrant/
+hrdb-sequelize.db
+npm-debug.log
+logfile.log
