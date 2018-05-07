@@ -1,0 +1,116 @@
+###############################################################################
+## Monit control file
+###############################################################################
+###############################################################################
+## Global section
+###############################################################################
+## Start Monit in the background (run as a daemon):
+  set daemon {{ monit_daemon_time }}            # check services at 2-minute intervals
+  set logfile /var/log/monit_log
+  set idfile /var/lib/monit/id
+  set statefile /var/lib/monit/state
+
+# сервера, через которые пойдет почтовое уведомление. Можно делать несколько, очередность срабатывания повторяет очередность внесения
+  set mailserver {{ monit_mail_server_host }} port {{ monit_mail_server_port }}
+    with timeout 30 seconds
+
+# кто получит уведомление?
+  {% for mail in monit_mails %}
+    set alert {{ mail }}
+  {% endfor %}
+
+  set eventqueue
+      basedir /var/lib/monit/events # set the base directory where events will be stored
+      slots 100                     # optionally limit the queue size
+  set mail-format {
+      from: monit@$HOST
+      subject: monit alert --  $EVENT $SERVICE
+      message: $EVENT Service $SERVICE
+                 Date:        $DATE
+                 Action:      $ACTION
+                 Host:        $HOST
+                 Description: $DESCRIPTION
+
+            Message was sent from Monit Monitoring Service
+ }
+
+###############################################################################
+## WEB-interface
+###############################################################################
+    set httpd port {{ monit_port }} and
+        allow {{ monit_user }}:{{ monit_password }}
+
+
+###############################################################################
+## Services
+###############################################################################
+  check system {{ hostname }}
+    if loadavg (1min) > 4 then alert
+    if loadavg (5min) > 2 then alert
+    if memory usage > 75% then alert
+    if swap usage > 25% then alert
+    if cpu usage (user) > 95% then alert
+    if cpu usage (system) > 70% then alert
+    if cpu usage (wait) > 60% then alert
+
+
+  check filesystem rootfs with path /
+    if space usage > 80% then alert
+
+#############################################################################
+# NGINX
+#############################################################################
+check process nginx with pidfile /run/nginx.pid
+  start program = "/etc/init.d/nginx start"
+  stop  program = "/etc/init.d/nginx stop"
+
+
+##############################################################################
+## PostgreSQL
+#############################################################################
+check process postgres with pidfile /var/run/postgresql/9.6-main.pid
+        group database
+        start program = "/etc/init.d/postgresql start"
+        stop  program = "/etc/init.d/postgresql stop"
+        if failed unixsocket /var/run/postgresql/.s.PGSQL.5432 protocol pgsql then restart
+        if failed host 127.0.0.1 port 5432 protocol pgsql then restart
+        if 5 restarts within 5 cycles then timeout
+        group database
+
+##############################################################################
+## NODE
+#############################################################################
+check process node-service with pidfile /var/run/node-service.pid
+        group node
+        start program = "/sbin/start node-service"
+        stop  program = "/sbin/stop node-service"
+        if failed port 3333 protocol HTTP
+            request /ping
+            with timeout 10 seconds
+            then restart
+        if 5 restarts within 5 cycles then alert
+        group node
+
+
+
+##############################################################################
+## Redis
+#############################################################################
+#  check process redis-server matching "redis-server"
+#    start program = "/usr/local/bin/redis-server /etc/redis/redis.conf"
+#    stop program = "/usr/local/bin/redis-cli shutdown"
+
+
+
+##############################################################################
+## NTPd
+#############################################################################
+  check process ntpd with pidfile /run/ntpd.pid
+    start program = "/etc/init.d/ntp start"
+    stop program = "/etc/init.d/ntp stop"
+
+
+###############################################################################
+## Includes
+###############################################################################
+   include /etc/monit/conf.d/*

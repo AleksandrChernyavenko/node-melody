@@ -1,0 +1,17 @@
+- hosts: dev
+  sudo: true
+  gather_facts: true
+  vars_files:
+    - vars/dev/main.yml
+  roles:
+#    - initial
+#    - node
+#    - run-npm-install
+#    - nginx
+#    - pgsql
+#    - php-ubuntu
+#    - pgadmin
+#    - run-migrate
+#    - node_development_tools
+    - create-file-storage
+#    - update_crontab

@@ -1,0 +1,6 @@
+---
+
+- name: install npm tools
+  sudo: yes
+  shell: npm install -g {{ item }}
+  with_items: "{{ npm_dev_tools }}"

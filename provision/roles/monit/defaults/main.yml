@@ -1,0 +1,12 @@
+---
+# defaults
+hostname: project-name.local
+monit_user: 'admin_f917cb3e977038362ceec892d92a57aa'
+monit_password: 'monit_pass_e4806b378e17b7fbfab5545643ea6161'
+monit_mails: ['monit_default_mail@mobidev.biz', 'monit_default_mail2@mobidev.biz']
+monit_daemon_time: 60
+monit_port: '2812'
+monit_mail_server_host: 'localhost'
+monit_mail_server_port: 25
+monit_mail_server_user: ''
+monit_mail_server_password: ''

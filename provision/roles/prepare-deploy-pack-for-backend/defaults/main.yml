@@ -1,0 +1,6 @@
+---
+# defaults file
+
+prepare_deploy_pack_for_backend:
+    archive_path: '/tmp/backend.tar.gz'
+    project_dir: '/var/www/melody-server'

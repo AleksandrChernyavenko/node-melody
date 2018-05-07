@@ -1,0 +1,4 @@
+---
+# defaults file for exim-send-only
+
+exim_queueinterval: "1m"

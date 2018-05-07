@@ -1,0 +1,34 @@
+---
+# tasks file for php-ubuntu
+
+
+- name: Add ppa Repository
+  become: yes
+  apt_repository: repo="{{ php_ppa }}" validate_certs=no
+
+- name: Install PHP Packages
+  become: yes
+  apt: pkg="{{ item }}" state=latest
+  with_items: "{{ php_packages }}"
+
+- name: make sure /etc/php/x.x/apache2/ directory exists
+  file: path="/etc/php/{{ php_v }}/apache2/" state=directory recurse=yes
+
+- name: configure PHP settings
+  template: src="{{ php_ini_template_src }}" dest="/etc/php/{{ php_v }}/apache2/php.ini"
+  notify:
+    - restart phpfpm
+    - restart apache
+  ignore_errors: yes
+
+- name: configure PHP-FPM settings
+  template: src="{{ php_ini_template_src }}" dest="/etc/php/{{ php_v }}/fpm/php.ini"
+  notify:
+    - restart phpfpm
+  ignore_errors: yes
+
+- name: configure PHP-FPM settings
+  template: src="{{ php_fpm_template_src }}" dest="/etc/php/{{ php_v }}/fpm/php-fpm.conf"
+  notify:
+    - restart phpfpm
+  ignore_errors: yes

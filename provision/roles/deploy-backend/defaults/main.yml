@@ -1,0 +1,10 @@
+---
+# defaults file for prepare-deploy-pack
+
+deploy_backend:
+  name_prepare_pack: '/tmp/backend.tar.gz'
+  project_directory_root:  '/var/www/melody-server/backend'
+  stored_releases: 5
+  folder_permissions: 764 # 777
+  run_user: www-data
+  run_group: www-data

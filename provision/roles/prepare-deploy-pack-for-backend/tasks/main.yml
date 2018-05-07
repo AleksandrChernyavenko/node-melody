@@ -1,0 +1,14 @@
+---
+# tasks file
+
+- name: remove tmp_project_dir
+  command: rm  {{ prepare_deploy_pack_for_backend.archive_path }}
+  ignore_errors: yes
+  become: yes
+  delegate_to: 127.0.0.1
+
+
+- name: pack project
+  shell: cd {{ prepare_deploy_pack_for_backend.project_dir }} && tar --exclude=.git --exclude=.node_modules  --exclude=.provision -zcvf {{ prepare_deploy_pack_for_backend.archive_path }} ./
+  become: yes
+  delegate_to: 127.0.0.1

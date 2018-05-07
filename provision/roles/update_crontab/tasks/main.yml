@@ -1,0 +1,19 @@
+---
+# tasks file for deploy
+- name: crontab - copy Crontab file to /etc/crontab
+  template: src=crontab.j2 dest=/etc/crontab
+
+- name: Create folders for logs
+  file: path="/var/log/node-console/" state=directory  mode=764
+
+- name: create files for write logs
+  file: path={{ item }} state=touch owner=www-data group=www-data mode=0664
+  with_items:
+    - "{{add_vacation_days_log_file}}"
+    - "{{init_vacation_days_log_file}}"
+    - "{{move_reserved_to_used_vacation_days_log_file}}"
+    - "{{send_email_before_vacation_start_log_file}}"
+    - "{{send_email_about_delete_team_member_from_project_log_file}}"
+    - "{{missing_update_of_ptt_log_file}}"
+    - "{{create_ptt_log_about_occupation_until_finish_log_file}}"
+    - "{{send_ppt_changes_log_file}}"

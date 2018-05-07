@@ -1,0 +1,47 @@
+---
+# tasks file for pgsql
+
+- name: Add PostgreSQL Repository
+  sudo: yes
+  apt_repository: repo='deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main' state=present
+
+- name: Add Keys for PostgreSQL Repository
+  sudo: yes
+  apt_key: url=https://www.postgresql.org/media/keys/ACCC4CF8.asc state=present
+
+- name: Update apt
+  sudo: yes
+  apt: update_cache=yes
+
+- name: Install PostgreSQL Packages
+  sudo: yes
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - libpq-dev
+    - postgresql-{{ pgdb.version }}
+    - postgresql-client-{{ pgdb.version }}
+    - python-pygresql
+    - python-psycopg2
+  notify: restart postgresql
+
+- name: Create databases
+  sudo: yes
+  sudo_user: "{{ pgdb.sudo_user }}"
+  postgresql_db: name={{ pgdb.database }} state=present
+
+- name: Create users
+  sudo: yes
+  sudo_user: "{{ pgdb.sudo_user }}"
+  postgresql_user: name={{ pgdb.user }} password={{ pgdb.password }} db={{ pgdb.database }} priv=ALL
+
+### need for monit
+- name: Create databases "root"
+  sudo: yes
+  sudo_user: "{{ pgdb.sudo_user }}"
+  postgresql_db: name=root state=present
+
+- name: Create PostgreSQL user "root"
+  sudo: yes
+  sudo_user: "{{ pgdb.sudo_user }}"
+  postgresql_user: name=root password={{ pgdb.password }} db=root priv=ALL
+

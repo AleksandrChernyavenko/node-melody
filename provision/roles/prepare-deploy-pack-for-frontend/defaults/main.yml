@@ -1,0 +1,6 @@
+---
+# defaults file
+
+prepare_deploy_pack_for_frontend:
+  archive_path: '/tmp/frontend.tar.gz'
+  project_dir: '/home/alex/www/melody'

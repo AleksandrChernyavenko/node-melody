@@ -1,0 +1,10 @@
+---
+# tasks file for exim-send-only
+
+#- name: add google dns
+#  shell: echo 'nameserver 8.8.8.8' >> /etc/resolvconf/resolv.conf.d/head
+
+- lineinfile: dest=/etc/resolvconf/resolv.conf.d/head line="nameserver 8.8.8.8"
+
+- name: update resolvconf
+  shell: resolvconf -u

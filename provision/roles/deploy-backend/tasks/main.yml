@@ -1,0 +1,25 @@
+---
+# tasks file for deploy
+- name: transfer packed source code to remote host
+  copy: src={{ deploy_backend.name_prepare_pack }} dest={{ deploy_backend.name_prepare_pack }} force=yes
+
+- name: remove previous version of project
+  shell: chdir="{{ deploy_backend.project_directory_root }}" ls -t | sed -e '1,{{ deploy_backend.stored_releases }}d' | xargs -d '\n' rm -Rf
+  ignore_errors: yes
+
+- name: get current time
+  shell: date +%Y_%m_%d__%H_%M_%S
+  register: deploy_current_time
+
+- name: Create project folder
+  file: path="{{ deploy_backend.project_directory_root }}/release-{{ deploy_current_time.stdout }}/" state=directory owner={{ deploy_backend.run_user }} group={{ deploy_backend.run_group }} mode={{ deploy_backend.folder_permissions }}
+
+- name: Unarchive packed project
+  unarchive: src="{{ deploy_backend.name_prepare_pack }}" dest="{{ deploy_backend.project_directory_root }}/release-{{ deploy_current_time.stdout }}/" owner={{ deploy_backend.run_user }} group={{ deploy_backend.run_group }} mode={{ deploy_backend.folder_permissions }}
+
+- name: remove old symlink
+  shell: rm "{{ deploy_backend.project_directory_root }}/current"
+  ignore_errors: yes
+
+- name: Create symlink
+  file: src="{{ deploy_backend.project_directory_root }}/release-{{ deploy_current_time.stdout }}/" dest="{{ deploy_backend.project_directory_root }}/current" state=link

@@ -1,0 +1,6 @@
+---
+# tasks file for initial
+
+- name: run migrate
+  become: yes
+  shell: cd {{ backend_directory_root }} && NODE_ENV="{{node_service__node_env}}" node_modules/.bin/sequelize --config=migrations/config/dbConfig.js db:migrate

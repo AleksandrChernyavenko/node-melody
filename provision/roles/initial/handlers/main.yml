@@ -1,0 +1,8 @@
+---
+# handlers file for initial
+
+- name: update tzdata
+  become: yes
+  command: dpkg-reconfigure --frontend noninteractive tzdata
+  tags:
+    - timezone

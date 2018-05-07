@@ -1,0 +1,27 @@
+vm:
+  boot_timeout: 300
+  box: "ubuntu/trusty64"
+  check_update: true
+  cpus: "auto"
+#  memory: "auto" # For autodetect (1/4 system memory)
+  memory: 2048
+  cpuexecutioncap: "50"
+  name: "melody-server"
+sync:
+  synced_folder: "." # or "/var/www/melody-server"
+  vagrant_folder: "/vagrant" # or "/var/www/melody-server"
+  second_synced_folder: "/var/www/melody-server"
+  second_vagrant_folder: "/var/www/melody-server"
+network:
+  private_ip: "192.168.33.13"
+  http_port: "8888"
+host:
+  name: "melody.local"
+  aliases: [
+    "db.melody.local",
+    "api.melody.local",
+    "admin.melody.local"
+  ]
+ansible:
+  playbook: "provision/dev.yml"
+  inventory_path: "provision/dev"

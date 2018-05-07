@@ -1,0 +1,20 @@
+---
+# defaults file for initial
+
+hostname: project-name.local
+packages: [
+  git-core,
+  curl,
+  wget,
+  htop,
+  python-psycopg2,
+  libpq-dev,
+  unzip,
+  zip,
+  expect-dev,
+  mc,
+  imagemagick,
+  graphicsmagick,
+]
+
+timezone_name: Europe/Kiev

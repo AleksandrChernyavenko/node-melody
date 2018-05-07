@@ -1,0 +1,11 @@
+---
+# tasks file for initial
+
+- name: set npm config sourse to http://registry.npmjs.org/ for faster download
+  shell: npm config set registry http://registry.npmjs.org/
+
+- name: run npm install
+  shell: cd {{ backend_directory_root }} && npm install
+#  ignore_errors: yes
+  remote_user: www-data
+  become: yes

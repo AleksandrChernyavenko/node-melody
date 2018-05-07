@@ -1,0 +1,7 @@
+---
+# defaults file for initial
+
+npm_dev_tools: [
+  nodemon,
+  supervisor
+]

@@ -1,0 +1,26 @@
+---
+# tasks file for initial
+
+- name: set hostname
+  shell: hostname "{{ hostname }}"
+
+- name: Update apt cache
+  sudo: yes
+  apt: update_cache=yes
+
+- name: be sure system packages are installed
+  apt: pkg={{ item }} state=present
+  with_items: "{{ packages }}"
+
+- name: Create timezone file
+  become: yes
+  template:
+    src: timezone.j2
+    dest: /etc/timezone
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - update tzdata
+  tags:
+    - timezone

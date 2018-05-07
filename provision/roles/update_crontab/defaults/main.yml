@@ -1,0 +1,14 @@
+---
+# defaults file
+node_service__node_env: "production" # "development"
+node_interpreter_path: "/usr/bin/node"
+backend_directory_root: '/var/www/melody-server'
+
+add_vacation_days_log_file: "/var/log/node-console/add_vacation_day.log"
+init_vacation_days_log_file: "/var/log/node-console/init_vacation_days_day.log"
+move_reserved_to_used_vacation_days_log_file: "/var/log/node-console/move_reserved_to_used_vacation_days.log"
+send_email_before_vacation_start_log_file: "/var/log/node-console/send_email_before_vacation_start_log_file.log"
+send_email_about_delete_team_member_from_project_log_file: "/var/log/node-console/send_email_about_delete_team_member_from_project_log_file.log"
+missing_update_of_ptt_log_file: "/var/log/node-console/missing_update_of_ptt_log_file.log"
+create_ptt_log_about_occupation_until_finish_log_file: "/var/log/node-console/create_ptt_log_about_occupation_until_finish_log_file.log"
+send_ppt_changes_log_file: "/var/log/node-console/send_ppt_changes_log_file.log"

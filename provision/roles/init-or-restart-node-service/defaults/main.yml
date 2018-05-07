@@ -1,0 +1,11 @@
+---
+node_service__service_name: node-service
+backend_directory_root: '/var/www/melody-server'
+
+node_service__user: "www-data"
+node_service__node_env: "production"
+node_service__app_dir: node-service
+node_service__pid_file: /var/run/node-service.pid
+node_service__log_file: /var/log/node-service.log
+node_service__error_file: /var/log/node-service.log
+

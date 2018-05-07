@@ -1,0 +1,3 @@
+---
+backend_directory_root: '/var/www/melody-server'
+node_service__node_env: "production"

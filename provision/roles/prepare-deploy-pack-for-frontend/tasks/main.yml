@@ -1,0 +1,17 @@
+---
+# tasks file
+
+- name: run buld project
+  shell: cd {{ prepare_deploy_pack_for_frontend.project_dir }} && npm run build:prod
+  become: yes
+  delegate_to: 127.0.0.1
+
+- name: pack project
+  shell: cd {{ prepare_deploy_pack_for_frontend.project_dir }}/dist && tar -zcvf {{ prepare_deploy_pack_for_frontend.archive_path }} ./
+  become: yes
+  delegate_to: 127.0.0.1
+
+- name: remove tmp_project_dir
+  become: yes
+  command: rm -Rf {{ prepare_deploy_pack_for_frontend.project_dir }}/dist
+  delegate_to: 127.0.0.1

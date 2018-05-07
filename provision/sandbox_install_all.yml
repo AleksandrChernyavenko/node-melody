@@ -1,0 +1,27 @@
+- hosts: sandbox
+  sudo: yes
+  gather_facts: false
+  vars_files:
+    - vars/sandbox/main.yml
+  roles:
+    - ntp-time-synchronization
+    - nginx
+    - initial
+    - node
+    - pgsql
+    - php-ubuntu
+    - pgadmin
+    - exim-send-only
+    - monit
+
+    - prepare-deploy-pack-for-backend
+    - deploy-backend
+
+    - prepare-deploy-pack-for-frontend
+    - deploy-frontend
+
+    - run-npm-install
+    - run-migrate
+    - create-file-storage
+    - init-or-restart-node-service
+    - update_crontab

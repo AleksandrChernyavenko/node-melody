@@ -1,0 +1,7 @@
+---
+# tasks file for deploy
+- name: transfer packed source code to remote host
+  file: path={{ item }} state=directory owner={{ create_file_storage_owner }} group={{ create_file_storage_group }} mode={{ create_file_storage_mode }}
+  with_items:
+      - "{{ create_file_storage_path }}"
+      - "{{ create_file_storage_path }}/images/genre"

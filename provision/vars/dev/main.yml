@@ -1,0 +1,50 @@
+---
+project_directory_root: '/var/www/melody-server'
+
+#nginx
+nginx_vhosts: [
+    { server_name: 'db.melody.local', root: '/opt/phppgadmin', template: 'php'}
+]
+
+nginx_ssl_vhosts: [
+    {
+    server_name: 'melody.local',
+    root: '/var/www/melody-server/public/build',
+    backendStaticRoot: '{{ backend_directory_root }}/public',
+    storageRoot: '/var/www',
+    template: 'ssl_node_new'
+    },
+]
+
+install_ssl_certs: true
+ssl_certs_folder: '/etc/nginx_certs/'
+ssl_certs_files: []
+ssl_certificate_file: melody.pem
+ssl_certificate_key_file: melody.key
+
+
+node_service__node_env: "development"
+
+#pgdb
+pgdb:
+    version: 9.6
+    sudo_user: postgres
+    root_password: f67c2bcbfcfa30fccb36f72dca22a817
+    user: melody_username
+    password: 0e90415df25cfcb9892176b003d03ed4
+    database: melody
+    postgresql_locale: en_US.UTF-8
+
+
+
+hostname: "melody.local"
+
+#node_development_tools
+npm_dev_tools: [
+  nodemon,
+  supervisor,
+  jshint,
+  mocha,
+  should,
+  jsdoc
+]

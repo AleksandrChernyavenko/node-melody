@@ -1,0 +1,67 @@
+---
+project_directory_root: '/var/www/melody-server'
+backend_directory_root: "{{ project_directory_root }}/backend/current"
+frontend_directory_root: "{{ project_directory_root }}/frontend/current"
+
+
+#nginx
+nginx_vhosts: [
+    { server_name: 'db.sandbox.guess-melody.ru', root: '/opt/phppgadmin', template: 'php', basic_auth: true},
+    { server_name: 'monit.sandbox.guess-melody.ru', template: 'proxy', proxy_pass_url: 'http://127.0.0.1:2812' },
+]
+
+nginx_ssl_vhosts: [
+    {
+    server_name: 'sandbox.guess-melody.ru',
+    root: "{{ frontend_directory_root }}",
+    backendStaticRoot: '{{ backend_directory_root }}/public',
+    storageRoot: '/var/www',
+    template: 'ssl_node_new'
+    },
+]
+
+install_ssl_certs: true
+ssl_certs_folder: '/etc/nginx_certs/'
+ssl_certs_files: []
+ssl_certificate_file: melody.pem
+ssl_certificate_key_file: melody.key
+
+
+create_file_storage_owner: 'www-data'
+create_file_storage_group: 'www-data'
+node_service__user: 'www-data'
+node_service__node_env: "sandbox"
+
+# to generate user
+# sudo mkdir /etc/nginx_certs/
+# sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx_certs/melody.key -out /etc/nginx_certs/melody.pem
+
+# http_auth
+http_basic_auth_users: [
+  { user: admin,  password: b2bPass},
+]
+
+#
+#pgdb
+#
+pgdb:
+    version: 9.6
+    sudo_user: postgres
+    root_password: f67c2bcbfcfa30fccb36f72dca22a817
+    user: melody_username
+    password: 0e90415df25cfcb9892176b003d03ed4
+    database: melody
+    postgresql_locale: en_US.UTF-8
+
+
+hostname: 'sandbox.guess-melody.ru'
+
+
+#
+# monit
+#
+monit_user: 'admin'
+monit_password: 'monit_pass'
+monit_mails: ['a.chernyavenko@mobidev.biz']
+monit_port: '2812'
+monit_daemon_time: 30

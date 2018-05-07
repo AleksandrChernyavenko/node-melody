@@ -1,0 +1,7 @@
+---
+# defaults file for prepare-deploy-pack
+
+create_file_storage_path: '/var/www/storage'
+create_file_storage_mode: 0777
+create_file_storage_owner: 'vagrant' # www-data
+create_file_storage_group: 'vagrant' # www-data

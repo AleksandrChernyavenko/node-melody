@@ -1,0 +1,11 @@
+---
+# defaults file for pgsql
+
+pgdb:
+    version: 9.4
+    sudo_user: postgres
+    root_password: mySecurePass
+    user: username
+    password: userPassword
+    database: dbName
+    postgresql_locale: en_US.UTF-8

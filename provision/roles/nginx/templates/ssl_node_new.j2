@@ -1,0 +1,66 @@
+upstream ssl_node_upstream {
+    server 127.0.0.1:3333;
+}
+
+server
+{
+    include     ports/http.conf;
+    server_name {{ item.server_name }};
+    return      301 https://{{ item.server_name }}$request_uri;
+}
+server
+{
+
+    server_name {{ item.server_name }};
+    root        {{ item.root }};
+    index index.html;
+
+    include enable/ssl.conf;
+    ssl_certificate    {{ ssl_certs_folder }}{{ ssl_certificate_file }};
+    ssl_certificate_key {{ ssl_certs_folder }}{{ ssl_certificate_key_file }};
+
+    include         ports/ssl.conf;
+    include         locations/favicon.conf;
+    include         locations/favicon_apple.conf;
+    include         locations/static.conf;
+    include         enable/gzip.conf;
+
+{% if (item.storageRoot is defined) %}
+    location /storage {
+        root {{ item.storageRoot }};
+        include         locations/static.conf;
+    }
+{% endif %}
+
+{% if (item.backendStaticRoot is defined) %}
+    location /backend-static {
+        alias {{ item.backendStaticRoot }};
+        include         locations/static.conf;
+    }
+{% endif %}
+
+    location ~ /\.well-known\/acme-challenge {
+        root /var/www/storage;
+        allow all;
+    }
+
+    location / {
+          index     index.html;
+          try_files $uri $uri/ /index.html;
+    }
+
+    location ~ ^/(api|socket\.io)/ {
+
+          proxy_redirect off;
+          proxy_set_header   X-Real-IP            $remote_addr;
+          proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+          proxy_set_header   X-Forwarded-Proto $scheme;
+          proxy_set_header   Host                   $http_host;
+          proxy_set_header   X-NginX-Proxy    true;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "upgrade";
+          proxy_http_version 1.1;
+          proxy_cache_key sfs$request_uri$scheme;
+          proxy_pass         http://ssl_node_upstream;
+    }
+}

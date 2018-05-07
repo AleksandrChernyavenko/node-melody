@@ -1,0 +1,11 @@
+---
+# tasks file
+
+- name: copy the Service template to /etc/init/node-service.conf
+  template: src=service.j2 dest=/etc/init/{{ node_service__service_name }}.conf owner=root mode=0700
+
+- name: make init script executable
+  shell: chmod +x /etc/init/{{ node_service__service_name }}.conf
+
+- name: restart node-service
+  service: name={{ node_service__service_name }} state=restarted

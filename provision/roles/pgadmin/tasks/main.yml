@@ -1,0 +1,23 @@
+---
+
+- name: install
+  shell: >
+    wget http://downloads.sourceforge.net/project/phppgadmin/phpPgAdmin%20%5Bstable%5D/phpPgAdmin-5.1/phpPgAdmin-5.1.tar.bz2 -O /tmp/phppgadmin.tar.bz2 && sudo tar jxf /tmp/phppgadmin.tar.bz2 -C /opt && rm /tmp/phppgadmin.tar.bz2
+    creates=/opt/phpPgAdmin-5.1
+  sudo: yes
+
+- name: move
+  shell: >
+    mv /opt/phpPgAdmin-5.1 /opt/phppgadmin
+    creates=/opt/phppgadmin
+  sudo: yes
+
+- name: config extra login security
+  replace: >
+    dest=/opt/phppgadmin/conf/config.inc.php
+    regexp="^\t\$conf\['extra_login_security'\]\s=\strue;"
+    replace="\t$conf['extra_login_security'] = false;"
+  sudo: yes
+
+- name: copy phppgadmin configs
+  copy: src=config/ dest=/opt/phppgadmin/conf/

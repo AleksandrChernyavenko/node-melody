@@ -1,0 +1,9 @@
+/node_modules/
+/tests/
+/.vagrant/
+/cli_migrate_database/
+/middleware/expressValidator.js
+/migrations/
+/provision/
+/public/
+/readme/

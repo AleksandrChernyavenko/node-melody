@@ -1,0 +1,14 @@
+- name: copy monit
+  copy: src=../files/monit_5.11-1_amd64.deb dest=/tmp/monit_5.11-1_amd64.deb
+
+- name: ensure Monit is installed
+  apt: deb=/tmp/monit_5.11-1_amd64.deb
+
+- name: remove monit from tmp
+  shell: rm /tmp/monit_5.11-1_amd64.deb
+
+- name: copy the Monit monitrc file
+  template: src=monitrc.j2 dest=/etc/monit/monitrc owner=root mode=0700
+
+- name: make sure the Monit started
+  service: name=monit state=restarted enabled=yes

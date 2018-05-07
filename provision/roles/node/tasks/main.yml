@@ -1,0 +1,9 @@
+---
+# tasks file
+
+- name: download node
+  sudo: yes
+  shell: curl -sL https://deb.nodesource.com/setup_{{ node_version }}.x | sudo -E bash -
+
+- name: install nodejs packages
+  apt: pkg=nodejs state=present
